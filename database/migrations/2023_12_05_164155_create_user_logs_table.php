@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('user_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('username');
-            $table->string('group_user');
+            $table->foreignId('user_group_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('page_title');
             $table->string('action');
+            $table->text('description');
             $table->timestamps();
+
+            // Schema::table('user_logs', function (Blueprint $table) {
+            //     $table->foreign('user_group_id')->references('id')->on('user_groups')
+            //         ->onDelete('cascade')->onUpdate('cascade');
+            // });
         });
     }
 
