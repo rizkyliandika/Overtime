@@ -15,6 +15,11 @@ return new class extends Migration {
             $table->string('action');
             $table->text('description');
             $table->timestamps();
+
+            // Schema::table('user_logs', function (Blueprint $table) {
+            //     $table->foreign('user_group_id')->references('id')->on('user_groups')
+            //         ->onDelete('cascade')->onUpdate('cascade');
+            // });
         });
     }
 
