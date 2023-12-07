@@ -36,7 +36,7 @@ class UserManagementResource extends Resource
                 TextColumn::make('id'),
                 TextColumn::make('username'),
                 TextColumn::make('name'),
-                TextColumn::make('group_name'),
+                TextColumn::make('user_group_id'),
 
             ])
             ->filters([

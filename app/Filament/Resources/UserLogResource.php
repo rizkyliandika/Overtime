@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
 
 class UserLogResource extends Resource
 {
@@ -31,7 +33,13 @@ class UserLogResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('id'),
+                TextColumn::make('username'),
+                TextColumn::make('page_title'),
+                TextColumn::make('group_name'),
+                TextColumn::make('action'),
+                TextColumn::make('description'),
+                
             ])
             ->filters([
                 //
