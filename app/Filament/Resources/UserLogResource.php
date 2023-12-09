@@ -21,6 +21,10 @@ class UserLogResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'User Log';
+
+    protected static ?string $navigationGroup = 'Core System';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -46,10 +50,10 @@ class UserLogResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
