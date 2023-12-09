@@ -3,17 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserGroupResource\Pages;
-use App\Filament\Resources\UserGroupResource\RelationManagers;
 use App\Models\UserGroup;
-use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
+use App\Models\User;
  
 
 class UserGroupResource extends Resource
@@ -22,11 +20,19 @@ class UserGroupResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'User Group';
+
+    protected static ?string $navigationGroup = 'Core System';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('group_name'),
+                TextInput::make('group_name')->required(),
+                Select::make('user_id')
+                    ->label('User')
+                    ->options(User::all()->pluck('username', 'id'))
+                    ->searchable()
             ]);
     }
 
@@ -42,6 +48,7 @@ class UserGroupResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
