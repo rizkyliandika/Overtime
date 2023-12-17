@@ -2,8 +2,6 @@
 
 namespace App\Filament\Pages\Auth;
 
-use App\Models\User;
-use App\Models\UserLog;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\Login as BaseLogin;
