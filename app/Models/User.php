@@ -27,7 +27,6 @@ class User extends Authenticatable implements HasName
      */
     protected $fillable = [
         'username',
-        'is_admin',
         'firstname',
         'lastname',
         'phone',

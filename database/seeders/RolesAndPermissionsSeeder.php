@@ -63,7 +63,6 @@ class RolesAndPermissionsSeeder extends Seeder
 
         User::create([
             "username" => "admin",
-            "is_admin" => 1,
             "firstname" => "admin",
             "lastname" => "admin",
             "email" => "admin@admin.com",
@@ -72,7 +71,6 @@ class RolesAndPermissionsSeeder extends Seeder
 
         User::create([
             "username" => "buildingoperator",
-            "is_admin" => 1,
             "firstname" => "building",
             "lastname" => "operator",
             "email" => "buildingoperator@buildingoperator.com",
@@ -81,7 +79,6 @@ class RolesAndPermissionsSeeder extends Seeder
 
         User::create([
             "username" => "tenant",
-            "is_admin" => 1,
             "firstname" => "tenant",
             "lastname" => "tenant",
             "email" => "tenant@tenant.com",
