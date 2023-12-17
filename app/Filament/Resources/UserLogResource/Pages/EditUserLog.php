@@ -10,9 +10,10 @@ class EditUserLog extends EditRecord
 {
     protected static string $resource = UserLogResource::class;
 
-    protected function getRedirectUrl(): string
+    protected function getHeaderActions(): array
     {
-        return $this->getResource()::getUrl('index');
+        return [
+            Actions\DeleteAction::make(),
+        ];
     }
-
 }
