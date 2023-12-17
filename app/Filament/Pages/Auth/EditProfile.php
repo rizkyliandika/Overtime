@@ -6,6 +6,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\EditProfile as BaseEditProfile;
+use Filament\Pages\Dashboard;
 
 class EditProfile extends BaseEditProfile
 {
@@ -30,5 +31,10 @@ class EditProfile extends BaseEditProfile
                 FileUpload::make('avatar'),
                 $this->getEmailFormComponent(),
             ]);
+    }
+
+    public function getRedirectUrl(): string
+    {
+        return Dashboard::getUrl();
     }
 }

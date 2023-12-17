@@ -3,33 +3,26 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserLogResource\Pages;
-use App\Filament\Resources\UserLogResource\RelationManagers;
 use App\Models\UserLog;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
 
 class UserLogResource extends Resource
 {
     protected static ?string $model = UserLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
+    
+    protected static ?string $navigationGroup = 'Admin Management';
 
     protected static ?string $navigationLabel = 'User Log';
-
-    protected static ?string $navigationGroup = 'Core System';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
             ]);
     }
 
@@ -37,23 +30,35 @@ class UserLogResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id'),
-                TextColumn::make('username'),
-                TextColumn::make('page_title'),
-                TextColumn::make('group_name'),
-                TextColumn::make('action'),
-                TextColumn::make('description'),
-                
+                Tables\Columns\TextColumn::make('id')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('user.username')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.roles.name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('action')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

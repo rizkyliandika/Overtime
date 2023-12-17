@@ -4,15 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasName
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     public function getFilamentName(): string
     {
@@ -26,10 +27,13 @@ class User extends Authenticatable implements HasName
      */
     protected $fillable = [
         'username',
+        'is_admin',
         'firstname',
         'lastname',
+        'phone',
         'email',
         'password',
+        'avatar',
     ];
 
     /**
@@ -50,4 +54,9 @@ class User extends Authenticatable implements HasName
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function user_logs(): HasMany
+    {
+        return $this->hasMany(UserLog::class);
+    }
 }
