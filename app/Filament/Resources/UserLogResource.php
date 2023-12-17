@@ -8,17 +8,12 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
 
 class UserLogResource extends Resource
 {
     protected static ?string $model = UserLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
-
     protected static ?string $navigationGroup = 'Admin Management';
 
     protected static ?string $navigationLabel = 'User Log';
