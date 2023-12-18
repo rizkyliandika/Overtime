@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages\Auth;
 
+use App\Models\UserLog;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\Auth\Login as BaseLogin;
@@ -10,6 +11,7 @@ use Filament\Facades\Filament;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 use Illuminate\Validation\ValidationException;
@@ -69,6 +71,31 @@ class Login extends BaseLogin
         $data = $this->form->getState();
 
         if (!Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
+            $currentDate = Carbon::now();
+            $ip = request()->ip();
+            $hostName = request()->host();
+            UserLog::query()->create([
+                "action" => "LOGIN",
+                "description" => new HtmlString("
+            <div>
+                <div>
+                    <p>Login: <span>Failed</span></p>
+                </div>
+                <div>
+                    <p>Username: <span>{$data['username']}</span></p>
+                </div>
+                <div>
+                    <p>Date: <span>$currentDate</span></p>
+                </div>
+                <div>
+                    <p>IP: <span>$ip</span></p>
+                </div>
+                <div>
+                    <p>Hostname: <span>$hostName</span></p>
+                </div>
+            </div>
+            ")
+            ]);
             $this->throwFailureValidationException();
         }
 
@@ -82,6 +109,32 @@ class Login extends BaseLogin
 
             $this->throwFailureValidationException();
         }
+        $currentDate = Carbon::now();
+        $ip = request()->ip();
+        $hostName = request()->host();
+        UserLog::query()->create([
+            "user_id" => auth()->id(),
+            "action" => "LOGIN",
+            "description" => new HtmlString("
+            <div>
+                <div>
+                    <p>Login: <span>Success</span></p>
+                </div>
+                <div>
+                    <p>Username: <span>$user->username</span></p>
+                </div>
+                <div>
+                    <p>Date: <span>$currentDate</span></p>
+                </div>
+                <div>
+                    <p>IP: <span>$ip</span></p>
+                </div>
+                <div>
+                    <p>Hostname: <span>$hostName</span></p>
+                </div>
+            </div>
+            ")
+        ]);
 
         session()->regenerate();
 

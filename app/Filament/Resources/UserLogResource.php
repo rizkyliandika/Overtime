@@ -14,7 +14,7 @@ class UserLogResource extends Resource
     protected static ?string $model = UserLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-right-on-rectangle';
-    
+
     protected static ?string $navigationGroup = 'Admin Management';
 
     protected static ?string $navigationLabel = 'User Log';
@@ -40,7 +40,9 @@ class UserLogResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('action')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('description')
+                    ->html()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
