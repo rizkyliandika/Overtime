@@ -3,10 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\Pages;
+use App\Filament\Resources\RoleResource\Pages\EditRole;
 use App\Filament\Resources\RoleResource\RelationManagers;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\MultiSelect;
 use Filament\Forms\Components\TextInput;
+use Filament\Pages\Page;
 use Filament\Tables\Columns\TextColumn;
 use Spatie\Permission\Models\Role;
 use Filament\Forms\Form;
@@ -29,11 +31,11 @@ class RoleResource extends Resource
                 Card::make()
                     ->schema([
                         TextInput::make('name')
-                        ->required()
-                        ->unique(),
-                    MultiSelect::make('permissions')
-                        ->relationship('permissions', 'name')
-                        ->preload(),
+                            ->required()
+                            ->unique(fn(Page $livewire): bool => ($livewire instanceof EditRole) ? false : true),
+                        MultiSelect::make('permissions')
+                            ->relationship('permissions', 'name')
+                            ->preload(),
                     ])
             ]);
     }

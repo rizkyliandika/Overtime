@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('request_overtimes', function (Blueprint $table) {
+        Schema::create('types', function (Blueprint $table) {
             $table->id();
-            $table->date("date");
-            $table->string("start_time");
-            $table->string("end_time");
-            $table->string("status")->default("In Progress");
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('request_overtimes');
+        Schema::dropIfExists('types');
     }
 };

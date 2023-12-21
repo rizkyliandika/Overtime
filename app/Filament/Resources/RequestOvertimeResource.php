@@ -17,6 +17,8 @@ class RequestOvertimeResource extends Resource
 {
     protected static ?string $model = RequestOvertime::class;
 
+    protected static ?string $navigationLabel = 'Request Overtime';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -49,13 +51,11 @@ class RequestOvertimeResource extends Resource
                         '11:30',
                     ])
                     ->default('09:00'),
-                Forms\Components\Select::make('type')
-                    ->options([
-                        'light_only' => 'Light Only',
-                        'light_and_air_conditioner' => 'Light & Air Conditioner',
-                    ])
-                    ->searchable()
+                Forms\Components\Select::make('type_id')
                     ->required()
+                    ->preload()
+                    ->searchable()
+                    ->relationship('type', 'name'),
             ]);
     }
 
@@ -70,7 +70,7 @@ class RequestOvertimeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('end_time')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('type')
+                Tables\Columns\TextColumn::make('type.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
