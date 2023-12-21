@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\UserLog;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
+use App\Policies\TenantPolicy;
+use App\Models\Tenant;
 use App\Policies\UserLogPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -24,7 +26,8 @@ class AuthServiceProvider extends ServiceProvider
         Permission::class => PermissionPolicy::class,
         Role::class => RolePolicy::class,
         User::class => UserPolicy::class,
-        UserLog::class => UserLogPolicy::class
+        UserLog::class => UserLogPolicy::class,
+        Tenant::class => TenantPolicy::class,
     ];
 
     /**

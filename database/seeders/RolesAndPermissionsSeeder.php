@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Type;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -84,5 +85,13 @@ class RolesAndPermissionsSeeder extends Seeder
             "email" => "tenant@tenant.com",
             "password" => bcrypt("tenant123456"),
         ])->assignRole($tenantRole);
+        
+        Type::create([
+            "name" => "Only Lightning",
+        ]);
+
+        Type::create([
+            "name" => "Lightning and Air Conditioner",
+        ]);
     }
 }
