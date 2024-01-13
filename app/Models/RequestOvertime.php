@@ -12,6 +12,7 @@ class RequestOvertime extends Model
 
     protected $fillable = [
         'type_id',
+        'tenant_id',
         'date',
         'start_time',
         'end_time',
@@ -21,5 +22,10 @@ class RequestOvertime extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(Type::class);
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

@@ -35,6 +35,11 @@ class TenantResource extends Resource
                 Forms\Components\TextInput::make('unit')
                     ->required()
                     ->numeric(),
+                Forms\Components\Select::make('user_id')
+                    ->required()
+                    ->preload()
+                    ->searchable()
+                    ->relationship('user', 'username'),
             ]);
     }
 
@@ -52,6 +57,8 @@ class TenantResource extends Resource
                 Tables\Columns\TextColumn::make('unit')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('user.username')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
