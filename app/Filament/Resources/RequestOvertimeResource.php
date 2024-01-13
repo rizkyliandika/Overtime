@@ -56,6 +56,23 @@ class RequestOvertimeResource extends Resource
                     ->preload()
                     ->searchable()
                     ->relationship('type', 'name'),
+                // Forms\Components\Select::make('tenant_id')
+                //     ->required()
+                //     ->preload()
+                //     ->searchable()
+                //     ->relationship('tenant', 'name'),
+                Forms\Components\Select::make('tenant_id')
+                    ->label('Tenant')
+                    ->options(function () {
+                        // Lakukan query sesuai kebutuhan
+                        $result = \App\Models\Tenant::where('user_id', '=', auth()->user()->id)->pluck('name', 'id');
+                
+                        // Ubah hasil query menjadi array yang sesuai dengan format opsi
+                        return $result->toArray();
+                    })
+                    ->searchable()
+                    ->required(),
+                
             ]);
     }
 
@@ -72,6 +89,8 @@ class RequestOvertimeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type.name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('tenant.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -82,6 +101,7 @@ class RequestOvertimeResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                
             ])
             ->filters([
                 //
