@@ -3,11 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RequestOvertimeResource\Pages;
+use App\Filament\Resources\RequestOvertimeResource\RelationManagers\TypesRelationManager;
+use App\Filament\Resources\RoleResource\RelationManagers\PermissionsRelationManager;
 use App\Models\RequestOvertime;
 use App\Models\Tenant;
 use App\Models\Type;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -44,12 +47,6 @@ class RequestOvertimeResource extends Resource
                     ->seconds(false)
                     ->minutesStep(15)
                     ->default('18:00'),
-                Forms\Components\CheckboxList::make('types')
-                    ->required()
-                    ->options(function () {
-                        $types = Type::all()->pluck('name', 'id')->toArray();
-                        return $types;
-                    }),
                 Forms\Components\Select::make('tenant_id')
                     ->label('Tenant')
                     ->relationship(name: 'tenant', titleAttribute: 'name')
@@ -60,7 +57,7 @@ class RequestOvertimeResource extends Resource
                         if ($user->hasAnyRole(['administrator', 'building-operator'])) {
                             $result = Tenant::all()->pluck('name', 'id')->toArray();
                         } else {
-                            $result = Tenant::where('user_id', '=', auth()->id())->pluck('name', 'id')->toArray();
+                            $result = Tenant::where('user_id', '=', Auth::user()->id)->pluck('name', 'id')->toArray();
                         }
 
                         return $result;
@@ -77,7 +74,7 @@ class RequestOvertimeResource extends Resource
         $isAdmin = $user->hasAnyRole(['administrator', 'building-operator']);
         return $table
             ->modifyQueryUsing(function (Builder $query) use ($isAdmin) {
-                $tenantIdByAuthUser = Tenant::query()->where('user_id', '=', auth()->id())->value('id');
+                $tenantIdByAuthUser = Tenant::query()->where('user_id', '=', Auth::user()->id)->value('id');
 
                 if (!$isAdmin) {
                     $query->where('tenant_id', '=', $tenantIdByAuthUser);
@@ -91,10 +88,8 @@ class RequestOvertimeResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('end_time')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('type.name')
-                    ->searchable()
-                    ->listWithLineBreaks()
-                    ->bulleted(),
+                Tables\Columns\TextColumn::make('types.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('tenant.name')
                     ->label('Company Name')
                     ->searchable(),
@@ -126,7 +121,7 @@ class RequestOvertimeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TypesRelationManager::class
         ];
     }
 

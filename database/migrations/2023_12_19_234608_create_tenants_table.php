@@ -19,11 +19,6 @@ return new class extends Migration
             $table->integer('unit');
             $table->timestamps();
         });
-
-        // Schema::table('user_management', function (Blueprint $table) {
-        //     $table->foreign('user_group_id')->references('id')->on('user_groups')
-        //         ->onDelete('cascade')->onUpdate('cascade');
-        // });
     }
 
     /**
