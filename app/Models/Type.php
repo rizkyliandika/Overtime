@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Type extends Model
 {
@@ -14,8 +14,8 @@ class Type extends Model
         'name',
     ];
 
-    public function request_overtimes(): HasMany
+    public function request_overtime(): BelongsTo
     {
-        return $this->hasMany(RequestOvertime::class);
+        return $this->belongsTo(RequestOvertime::class);
     }
 }

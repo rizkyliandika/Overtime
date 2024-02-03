@@ -13,7 +13,7 @@ class RequestOvertimePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(["administrator", "tenant"]);
+        return $user->hasAnyRole(["administrator", "tenant", "building-operator"]);
     }
 
     /**
@@ -21,7 +21,7 @@ class RequestOvertimePolicy
      */
     public function view(User $user, RequestOvertime $requestOvertime): bool
     {
-        return $user->hasAnyRole(["administrator", "tenant"]);
+        return $user->hasAnyRole(["administrator", "tenant", "building-operator"]);
     }
 
     /**
@@ -29,7 +29,7 @@ class RequestOvertimePolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(["administrator", "tenant"]);
+        return $user->hasAnyRole(["administrator", "tenant", "building-operator"]);
     }
 
     /**
@@ -37,7 +37,7 @@ class RequestOvertimePolicy
      */
     public function update(User $user, RequestOvertime $requestOvertime): bool
     {
-        return $user->hasAnyRole(["administrator", "tenant"]);
+        return $user->hasAnyRole(["administrator", "tenant", "building-operator"]);
     }
 
     /**
@@ -45,6 +45,6 @@ class RequestOvertimePolicy
      */
     public function delete(User $user, RequestOvertime $requestOvertime): bool
     {
-        return $user->hasAnyRole(["administrator", "tenant"]);
+        return $user->hasAnyRole(["administrator", "tenant", "building-operator"]);
     }
 }

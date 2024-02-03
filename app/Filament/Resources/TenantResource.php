@@ -24,6 +24,7 @@ class TenantResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Company Name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('address')
@@ -48,6 +49,7 @@ class TenantResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Company Name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
                     ->searchable(),

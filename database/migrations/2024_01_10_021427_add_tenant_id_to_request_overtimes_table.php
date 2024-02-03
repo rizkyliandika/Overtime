@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('request_overtimes', function (Blueprint $table) {
-            $table->foreignId('tenant_id')->after('type_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('tenant_id')->after('id')->constrained()->cascadeOnDelete();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('request_overtimes', function (Blueprint $table) {
-            //
+            $table->dropForeign(['tenant_id']);
         });
     }
 };

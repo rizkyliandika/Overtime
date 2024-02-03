@@ -3,15 +3,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RequestOvertimeResource\Pages;
-use App\Filament\Resources\RequestOvertimeResource\RelationManagers;
 use App\Models\RequestOvertime;
+use App\Models\Tenant;
+use App\Models\Type;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class RequestOvertimeResource extends Resource
 {
@@ -26,59 +27,62 @@ class RequestOvertimeResource extends Resource
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('date')
+                    ->default(now())
                     ->required(),
                 Forms\Components\TimePicker::make('start_time')
                     ->required()
-                    ->dataList([
-                        '09:00',
-                        '09:15',
-                        '10:30',
-                        '10:45',
-                        '11:00',
-                        '11:15',
-                        '11:30',
-                    ])
-                    ->default('09:00'),
+                    ->native(false)
+                    ->seconds(false)
+                    ->minutesStep(15)
+                    ->timezone('Asia/Jakarta')
+                    ->default('17:00'),
                 Forms\Components\TimePicker::make('end_time')
                     ->required()
-                    ->dataList([
-                        '09:00',
-                        '09:15',
-                        '10:30',
-                        '10:45',
-                        '11:00',
-                        '11:15',
-                        '11:30',
-                    ])
-                    ->default('09:00'),
-                Forms\Components\Select::make('type_id')
+                    ->native(false)
+                    ->timezone('Asia/Jakarta')
+                    ->after('start_time')
+                    ->seconds(false)
+                    ->minutesStep(15)
+                    ->default('18:00'),
+                Forms\Components\CheckboxList::make('types')
                     ->required()
-                    ->preload()
-                    ->searchable()
-                    ->relationship('type', 'name'),
-                // Forms\Components\Select::make('tenant_id')
-                //     ->required()
-                //     ->preload()
-                //     ->searchable()
-                //     ->relationship('tenant', 'name'),
+                    ->options(function () {
+                        $types = Type::all()->pluck('name', 'id')->toArray();
+                        return $types;
+                    }),
                 Forms\Components\Select::make('tenant_id')
                     ->label('Tenant')
+                    ->relationship(name: 'tenant', titleAttribute: 'name')
                     ->options(function () {
-                        // Lakukan query sesuai kebutuhan
-                        $result = \App\Models\Tenant::where('user_id', '=', auth()->user()->id)->pluck('name', 'id');
-                
-                        // Ubah hasil query menjadi array yang sesuai dengan format opsi
-                        return $result->toArray();
+                        $user = Auth::user();
+                        $result = [];
+
+                        if ($user->hasAnyRole(['administrator', 'building-operator'])) {
+                            $result = Tenant::all()->pluck('name', 'id')->toArray();
+                        } else {
+                            $result = Tenant::where('user_id', '=', auth()->id())->pluck('name', 'id')->toArray();
+                        }
+
+                        return $result;
                     })
                     ->searchable()
                     ->required(),
-                
+
             ]);
     }
 
     public static function table(Table $table): Table
     {
+        $user = Auth::user();
+        $isAdmin = $user->hasAnyRole(['administrator', 'building-operator']);
         return $table
+            ->modifyQueryUsing(function (Builder $query) use ($isAdmin) {
+                $tenantIdByAuthUser = Tenant::query()->where('user_id', '=', auth()->id())->value('id');
+
+                if (!$isAdmin) {
+                    $query->where('tenant_id', '=', $tenantIdByAuthUser);
+                }
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('date')
                     ->date()
@@ -88,8 +92,11 @@ class RequestOvertimeResource extends Resource
                 Tables\Columns\TextColumn::make('end_time')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->listWithLineBreaks()
+                    ->bulleted(),
                 Tables\Columns\TextColumn::make('tenant.name')
+                    ->label('Company Name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
@@ -101,7 +108,7 @@ class RequestOvertimeResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
             ])
             ->filters([
                 //

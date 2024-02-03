@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RequestOvertime extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'type_id',
         'tenant_id',
         'date',
         'start_time',
@@ -19,9 +19,9 @@ class RequestOvertime extends Model
         'status'
     ];
 
-    public function type(): BelongsTo
+    public function types(): HasMany
     {
-        return $this->belongsTo(Type::class);
+        return $this->hasMany(Type::class);
     }
 
     public function tenant(): BelongsTo
